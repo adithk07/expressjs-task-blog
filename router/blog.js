@@ -3,6 +3,7 @@ const path = require("path");
 const blogs = require("../data/blogs");
 const languages = require("../data/languages");
 const fs = require("fs");
+const e = require("express");
 
 const route = express.Router();
 
@@ -43,6 +44,37 @@ route.post("/home", (req, res) => {
   const lang = req.body;
   languages.push(lang);
   res.status(201).send("A home page post request");
+});
+
+route.put("/blogpost/:slug", (req, res) => {
+  let slug = req.params.slug;
+  let title = req.body.title;
+  let content = req.body.content;
+
+  let index = blogs.findIndex((blogs) => blogs.slug == slug);
+
+  if (index >= 0) {
+    let blog = blogs[index];
+    blog.title = title;
+    blog.content = content;
+    res.json(blog);
+  } else {
+    res.status(404);
+  }
+});
+
+route.delete("/blogpost/:slug", (req, res) => {
+  let slug = req.params.slug;
+
+  let index = blogs.findIndex((blogs) => blogs.slug == slug);
+
+  if (index >= 0) {
+    let blog = blogs[index];
+    blogs.splice(index, 1);
+    res.json(blog);
+  } else {
+    res.status(404);
+  }
 });
 
 module.exports = route;
