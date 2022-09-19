@@ -2,8 +2,11 @@ const express = require("express");
 const path = require("path");
 const blogs = require("../data/blogs");
 const languages = require("../data/languages");
+const fs = require("fs");
 
 const route = express.Router();
+
+route.use(express.json());
 
 route.get("/", (req, res) => {
   //   res.sendFile(path.join(__dirname, "../templates/index.html"));
@@ -34,6 +37,12 @@ route.get("/home", (req, res) => {
   res.render("homepage", {
     languages: languages,
   });
+});
+
+route.post("/home", (req, res) => {
+  const lang = req.body;
+  languages.push(lang);
+  res.status(201).send("A home page post request");
 });
 
 module.exports = route;
