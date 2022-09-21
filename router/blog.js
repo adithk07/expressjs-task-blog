@@ -3,7 +3,7 @@ const path = require("path");
 const blogs = require("../data/blogs");
 const languages = require("../data/languages");
 const fs = require("fs");
-const e = require("express");
+const Programs = require("../models/programs");
 
 const route = express.Router();
 
@@ -12,6 +12,16 @@ route.use(express.json());
 route.get("/", (req, res) => {
   //   res.sendFile(path.join(__dirname, "../templates/index.html"));
   res.render("home");
+});
+
+route.get("/programming", async (req, res) => {
+  try {
+    const programs = await Programs.findAll();
+    res.json({ programs });
+  } catch (err) {
+    console.log(err);
+    res.sendStatus(500);
+  }
 });
 
 route.get("/blog", (req, res) => {
